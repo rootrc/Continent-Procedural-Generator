@@ -13,11 +13,16 @@ lacunarity = 2.0
 
 def generate_continent(width, height, scale=100, seed=0, cx=width/2, cy=height / 2):
     heightmap = np.zeros((height, width))
+    nx_scale = np.random.randint(30, 75) / 50
+
+    
     for y in range(height):
         for x in range(width):
             nx = (x - cx) / scale
             ny = (y - cy) / scale
-            distance = (np.sqrt(nx**2 + ny**2) / 2.2) ** 1.2
+            nx_distorted = nx * nx_scale + snoise2(nx * 2, ny * 2, octaves=2, base=seed + 100) * 0.3
+            ny_distorted = ny + snoise2(nx * 2, ny * 2, octaves=2, base=seed + 100) * 0.3
+            distance = (np.sqrt(nx_distorted**2 + ny_distorted**2) / 2.2) ** 1.2
             
             noise_val = snoise2(nx, ny,
                                 octaves=octaves,
