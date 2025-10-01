@@ -5,9 +5,8 @@ from noise import snoise2
 
 width = 512
 height = 512
-scale = 100.0
 
-octaves = 8
+octaves = 6
 persistence = 0.4
 lacunarity = 2.0
 
@@ -20,8 +19,9 @@ def generate_continent(width, height, scale=100, seed=0, cx=width/2, cy=height /
         for x in range(width):
             nx = (x - cx) / scale
             ny = (y - cy) / scale
-            nx_distorted = nx * nx_scale + snoise2(nx * 2, ny * 2, octaves=2, base=seed + 100) * 0.3
-            ny_distorted = ny + snoise2(nx * 2, ny * 2, octaves=2, base=seed + 100) * 0.3
+            distort_noise = snoise2(nx*2, ny*2, octaves=2, base=seed + 100)
+            nx_distorted = nx * nx_scale + distort_noise * 0.3
+            ny_distorted = ny + distort_noise * 0.3
             distance = (np.sqrt(nx_distorted**2 + ny_distorted**2) / 2.2) ** 1.2
             
             noise_val = snoise2(nx, ny,
@@ -29,23 +29,21 @@ def generate_continent(width, height, scale=100, seed=0, cx=width/2, cy=height /
                                 persistence=persistence,
                                 lacunarity=lacunarity,
                                 repeatx=width,
-                                repeaty=height,
+                                repeaty=height, 
                                 base=seed)
             noise_val = (noise_val + 1) / 2
             heightmap[y][x] = noise_val - distance
     heightmap = np.clip(heightmap, 0, 1)
     return heightmap
 
-num_continents = 1
-continent_centers = [
-    (width * 0.5, height * 0.5)
-]
+num_continents = 5
 
 global_map = np.zeros((height, width))
 
 for i in range(num_continents):
     seed = np.random.randint(1, 1000)
-    cx, cy = continent_centers[i]
+    cx, cy = np.random.randint(10, 90) / 100 * width, np.random.randint(10, 90) / 100 * height
+    scale = np.random.randint(50, 100)
     continent = generate_continent(width, height, scale, seed, cx, cy)
     global_map = np.add(global_map, continent)
 
