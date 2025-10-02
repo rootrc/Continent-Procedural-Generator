@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from noise import snoise2
 
-global_width = 512
-global_height = 512
+global_width = 256
+global_height = 256
 
 octaves = 6
 persistence = 0.5
@@ -37,7 +37,7 @@ def generate_continent(width, height, scale, seed, cx = global_width/2, cy = glo
     noise_val = (noise_val + 1) / 2
     distance = (np.sqrt(nx_distorted**2 + ny_distorted**2) / 2.2) ** 1.3
     heightmap = noise_val - distance
-
+    
     heightmap = np.clip(heightmap, 0, 1)
     return heightmap
 
@@ -48,13 +48,16 @@ global_map = np.zeros((global_height, global_width))
 for i in range(num_continents):
     seed = np.random.randint(1, 1000)
     cx, cy = np.random.uniform(0.1, 0.9) * global_width, np.random.uniform(0.1, 0.9) * global_height
-    scale = np.random.randint(50, 100)
+    scale = np.random.randint(25, 50)
     continent = generate_continent(global_width, global_height, scale, seed, cx, cy)
     global_map += continent
     
 global_map = np.clip(global_map, 0, 1)
+kernel = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
+global_map = np.pad(global_map, 1, mode = 'edge')
+global_map = np.array([[np.sum(kernel * global_map[i:i + 3, j:j + 3]) for j in range(global_map.shape[1] - 2)] for i in range(global_map.shape[0] - 2)])
 
-plt.figure(figsize = (8, 8))
+plt.figure(figsize = (4, 4))
 plt.imshow(global_map, cmap = 'terrain')
 plt.title("Simplex Noise - Continental Shape")
 plt.axis('off')
