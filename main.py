@@ -1,12 +1,12 @@
-import random
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap, BoundaryNorm
 from noise import snoise2
 
 global_width = 512
 global_height = 512
 
-octaves = 6
+octaves = 8
 persistence = 0.5
 lacunarity = 2.0
 
@@ -43,15 +43,20 @@ def generate_continent(width, height, scale, seed, cx = global_width/2, cy = glo
 
 seed = np.random.randint(1, 1000)
 cx, cy = np.random.uniform(0.4, 0.6) * global_width, np.random.uniform(0.4, 0.6) * global_height
-scale = np.random.randint(100, 125)
+scale = np.random.randint(110, 130)
 continent = generate_continent(global_width, global_height, scale, seed, cx, cy)
     
 kernel = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
 continent = np.pad(continent, 1, mode = 'edge')
 continent = np.array([[np.sum(kernel * continent[i:i + 3, j:j + 3]) for j in range(continent.shape[1] - 2)] for i in range(continent.shape[0] - 2)])
 
+colors = ['#000080', '#006F6A', '#D2B48C', '#136d15', '#C37A3F', '#6E4B3A']
+cmap = ListedColormap(colors)
+bounds = [0.0, 0.15, 0.2, 0.22, 0.4875, 0.525, 1.0]
+norm = BoundaryNorm(bounds, cmap.N)
+
 plt.figure(figsize = (8, 8))
-plt.imshow(continent, cmap = 'terrain')
+plt.imshow(continent, cmap=cmap, norm=norm)
 plt.title("Simplex Noise - Continental Shape")
 plt.axis('off')
 plt.tight_layout()
