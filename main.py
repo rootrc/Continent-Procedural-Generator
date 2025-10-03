@@ -21,7 +21,7 @@ def generate_height_map(width, height, scale, seed, cx = global_width/2, cy = gl
     nx = (xx - cx) / scale
     ny = (yy - cy) / scale
 
-    distort_noise = np.vectorize(lambda x, y: snoise2(x * 2, y * 2, octaves = 3, base = seed + 100))(nx, ny) * 0.7
+    distort_noise = np.vectorize(lambda x, y: snoise2(x * 2, y * 2, octaves = 4, base = seed + 100))(nx, ny) * 0.7
     nx_distorted = nx * nx_scale + distort_noise
     ny_distorted = ny + distort_noise
     
@@ -106,8 +106,8 @@ cmap = ListedColormap(colors)
 height_bounds = [0.0, 0.10, 0.15, 0.2, 0.22, 0.325, 0.475, 0.525, 1.0]
 moisture_bounds = [0.0, 0.4, 0.575, 1.0]
 
-height_indices = np.digitize(height_map, bins=height_bounds) - 1
-moisture_indices = np.digitize(moisture_map, bins=moisture_bounds) - 1
+height_indices = np.digitize(height_map, bins = height_bounds) - 1
+moisture_indices = np.digitize(moisture_map, bins = moisture_bounds) - 1
 
 combined_grid = height_indices * (len(moisture_bounds) - 1) + moisture_indices
 
@@ -115,7 +115,7 @@ bounds = np.linspace(0, len(colors), len(colors) + 1)
 norm = BoundaryNorm(bounds, cmap.N)
 
 plt.figure(figsize = (8, 8))
-plt.imshow(combined_grid, cmap=cmap, norm=norm)
+plt.imshow(combined_grid, cmap = cmap, norm = norm)
 plt.title("Simplex Noise - Continental Shape")
 plt.axis('off')
 plt.tight_layout()
