@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from noise import snoise2
 
+from artifact_remover import remove_shallow_water_artifacts
+
 global_width = 512
 global_height = 512
 
@@ -68,9 +70,11 @@ scale = np.random.randint(130, 140)
 cx, cy = np.random.uniform(0.4, 0.6) * global_width, np.random.uniform(0.4, 0.6) * global_height
     
 height_map = generate_height_map(global_width, global_height, scale, seed)
+remove_shallow_water_artifacts(height_map)
 kernel = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
 height_map = np.pad(height_map, 1, mode = 'edge')
 height_map = np.array([[np.sum(kernel * height_map[i:i + 3, j:j + 3]) for j in range(height_map.shape[1] - 2)] for i in range(height_map.shape[0] - 2)])
+
 
 seed = np.random.randint(1, 1000)
 scale = 100
@@ -103,7 +107,7 @@ colors = ['#000080', # Dry    Ocean
         ]
 cmap = ListedColormap(colors)
 
-height_bounds = [0.0, 0.10, 0.15, 0.2, 0.22, 0.325, 0.475, 0.525, 1.0]
+height_bounds = [0.0, 0.1, 0.15, 0.2, 0.22, 0.325, 0.475, 0.525, 1.0]
 moisture_bounds = [0.0, 0.4, 0.575, 1.0]
 
 height_indices = np.digitize(height_map, bins = height_bounds) - 1
