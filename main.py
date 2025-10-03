@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from noise import snoise2
 
-from artifact_remover import remove_shallow_water_artifacts
+from artifact_remover import remove_deep_water_artifacts, remove_shallow_water_artifacts
 
 global_width = 512
 global_height = 512
@@ -71,6 +71,7 @@ cx, cy = np.random.uniform(0.4, 0.6) * global_width, np.random.uniform(0.4, 0.6)
     
 height_map = generate_height_map(global_width, global_height, scale, seed)
 remove_shallow_water_artifacts(height_map)
+remove_deep_water_artifacts(height_map)
 kernel = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
 height_map = np.pad(height_map, 1, mode = 'edge')
 height_map = np.array([[np.sum(kernel * height_map[i:i + 3, j:j + 3]) for j in range(height_map.shape[1] - 2)] for i in range(height_map.shape[0] - 2)])
