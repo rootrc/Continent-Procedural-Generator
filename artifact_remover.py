@@ -22,7 +22,7 @@ def remove_shallow_water_artifacts_bfs(height_map, x, y, visited, rows, cols):
         cx, cy = queue.popleft()
         for dx, dy in directions:
             nx, ny = cx + dx, cy + dy
-            if  not (0 <= nx < rows and 0 <= ny < cols) or visited[nx, ny]:
+            if not (0 <= nx < rows and 0 <= ny < cols) or visited[nx, ny]:
                 continue
             if height_map[nx, ny] >= 0.2:
                 return []

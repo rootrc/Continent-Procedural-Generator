@@ -1,7 +1,5 @@
-from collections import deque
 import numpy as np
 
-# 8-directional movement
 directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1), (-1, 1), (1, -1)]
 distances = [1, np.sqrt(2), 1, np.sqrt(2), 1, np.sqrt(2), 1, np.sqrt(2)]
 
@@ -28,8 +26,7 @@ def compute_d8_flow_direction(height_map):
             flow_dir[x, y] = best_dir
     return flow_dir
 
-def trace_river(flow_dir, height_map, start_x, start_y, max_length=500):
-    path = []
+def trace_river(flow_dir, height_map, start_x, start_y, max_length=100):
     rows, cols = height_map.shape
     x, y = start_x, start_y
     for _ in range(max_length):
@@ -40,7 +37,5 @@ def trace_river(flow_dir, height_map, start_x, start_y, max_length=500):
         nx, ny = x + dx, y + dy
         if not (0 <= nx < rows and 0 <= ny < cols):
             break
-        path.append((nx, ny))
-        height_map[max(0, nx-2):min(rows, nx+2), max(0, ny-2):min(cols, ny+2)] = 0.15
+        height_map[max(0, nx - 2):min(rows, nx + 2), max(0, ny - 2):min(cols, ny + 2)] = 0.15
         x, y = nx, ny
-    return path
