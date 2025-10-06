@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from noise import snoise2
-
+from scipy.ndimage import gaussian_filter
 from artifact_remover import remove_deep_water_artifacts, remove_shallow_water_artifacts
 from river import compute_d8_flow_direction, get_top_n_high_points, trace_river
 
@@ -40,13 +40,13 @@ def generate_height_map(width, height, scale, seed, cx = global_width/2, cy = gl
     noise_val = (noise_val + 1) / 2
     distance = (np.sqrt(nx_distorted**2 + ny_distorted**2) / 2.2) ** 1.5
     height_map = noise_val - distance
-    
+    ridge_noise = 1 - np.abs(np.vectorize(lambda x, y: snoise2(x * 2, y * 2, base=seed + 200))(nx, ny))
+    height_map += ridge_noise * 0.1
     height_map = np.clip(height_map, 0, 1)
     return height_map
 
 def generate_mositure_map(width, height, scale, seed):
     moisture_map = np.zeros((height, width))
-
     x = np.arange(width)
     y = np.arange(height)
     xx, yy = np.meshgrid(x, y)
@@ -72,6 +72,11 @@ scale = np.random.randint(130, 140)
 cx, cy = np.random.uniform(0.4, 0.6) * global_width, np.random.uniform(0.4, 0.6) * global_height
     
 height_map = generate_height_map(global_width, global_height, scale, seed)
+
+land_mask = height_map > 0.2
+blurred = gaussian_filter(height_map * land_mask, sigma=1)
+height_map[land_mask] = blurred[land_mask]
+
 remove_shallow_water_artifacts(height_map)
 remove_deep_water_artifacts(height_map)
 
@@ -116,7 +121,7 @@ colors = ['#000080', # Dry    Ocean
         ]
 cmap = ListedColormap(colors)
 
-height_bounds = [0.0, 0.1, 0.15, 0.2, 0.22, 0.325, 0.475, 0.525, 1.0]
+height_bounds = [0.0, 0.1, 0.15, 0.2, 0.22, 0.325, 0.5, 0.55, 1.0]
 moisture_bounds = [0.0, 0.4, 0.575, 1.0]
 
 height_indices = np.digitize(height_map, bins = height_bounds) - 1
