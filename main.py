@@ -4,6 +4,7 @@ from matplotlib.colors import ListedColormap, BoundaryNorm
 from noise import snoise2
 
 from artifact_remover import remove_deep_water_artifacts, remove_shallow_water_artifacts
+from river import compute_d8_flow_direction, get_top_n_high_points, trace_river
 
 global_width = 512
 global_height = 512
@@ -11,6 +12,7 @@ global_height = 512
 octaves = 8
 persistence = 0.5
 lacunarity = 2.0
+river_num = 5
 
 def generate_height_map(width, height, scale, seed, cx = global_width/2, cy = global_height/2):
     height_map = np.zeros((height, width))
@@ -72,6 +74,12 @@ cx, cy = np.random.uniform(0.4, 0.6) * global_width, np.random.uniform(0.4, 0.6)
 height_map = generate_height_map(global_width, global_height, scale, seed)
 remove_shallow_water_artifacts(height_map)
 remove_deep_water_artifacts(height_map)
+
+flow_dir = compute_d8_flow_direction(height_map)
+trace_river(flow_dir, height_map, 256, 256)
+for (x, y) in get_top_n_high_points(height_map, river_num):
+    trace_river(flow_dir, height_map, x, y)
+
 kernel = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
 height_map = np.pad(height_map, 1, mode = 'edge')
 height_map = np.array([[np.sum(kernel * height_map[i:i + 3, j:j + 3]) for j in range(height_map.shape[1] - 2)] for i in range(height_map.shape[0] - 2)])
