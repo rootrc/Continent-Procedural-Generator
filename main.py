@@ -14,7 +14,7 @@ octaves = 8
 persistence = 0.5
 lacunarity = 2.0
 river_num = 5
-num_towns = 10
+num_towns = 12
 
 def generate_height_map(width, height, scale, seed, cx = global_width/2, cy = global_height/2):
     height_map = np.zeros((height, width))
