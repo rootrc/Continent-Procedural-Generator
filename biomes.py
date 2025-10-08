@@ -10,9 +10,10 @@ colors = [
     '#E4A672', '#408722', '#315B34', # Desert / Flatland / Forest
     '#D2691E', '#a7754e', '#8F7A50', # Mesa / Hill
     '#5a3a3a', '#7c5a50', '#6b4a3c', # Mountain
+    '#FFFAFA', '#FFFAFA', '#FFFAFA', # Snow
 ]
 
-height_bounds = [0.0, 0.1, 0.15, 0.2, 0.22, 0.325, 0.5, 0.55, 1.0]
+height_bounds = [0.0, 0.1, 0.15, 0.2, 0.22, 0.325, 0.5, 0.55, 0.7, 1.0]
 moisture_bounds = [0.0, 0.4, 0.575, 1.0]
 
 cmap = ListedColormap(colors)

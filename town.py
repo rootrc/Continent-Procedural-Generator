@@ -7,12 +7,11 @@ def generate_towns(height_map, moisture_map, num_towns):
     town_names = name_generation.generate_town_names(num_towns)
     return town_locations, town_names
 
-def generate_town_locations(height_map, moisture_map, num_towns):
+def generate_town_locations(height_map, moisture_map, num_towns, min_dist = 30):
     flat_indices = np.argsort(get_location_score(height_map, moisture_map).ravel())[::-1]
     coords = np.column_stack(np.unravel_index(flat_indices, height_map.shape))
 
     town_locations = []
-    min_dist = 30
 
     for y, x in coords:
         if len(town_locations) >= num_towns:

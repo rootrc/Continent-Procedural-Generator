@@ -50,10 +50,7 @@ def generate_height_map(width, height, river_num, octaves, persistence, lacunari
     artifact_remover.remove_shallow_water_artifacts(height_map)
     artifact_remover.remove_deep_water_artifacts(height_map)
     
-    flow_dir = hydrology.compute_d8_flow_direction(height_map)
-    hydrology.trace_river(flow_dir, height_map, 256, 256)
-    for (x, y) in hydrology.get_top_n_high_points(height_map, river_num):
-        hydrology.trace_river(flow_dir, height_map, x, y)
+    hydrology.trace_rivers(height_map, river_num)
 
     kernel = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
     height_map = np.pad(height_map, 1, mode = 'edge')
