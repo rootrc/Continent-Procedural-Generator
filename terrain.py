@@ -39,7 +39,7 @@ def generate_height_map0(width, height, scale, cx, cy, octaves, persistence, lac
 def generate_height_map(width, height, river_num, octaves, persistence, lacunarity):
     seed = np.random.randint(1, 1000)
     scale = np.random.randint(120, 130)
-    cx, cy = np.random.uniform(0.4, 0.6) * width, np.random.uniform(0.4, 0.6) * height
+    cx, cy = 0.5 * width, 0.5 * height
         
     height_map = generate_height_map0(width, height, scale, cx, cy, octaves, persistence, lacunarity, seed)
 

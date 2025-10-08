@@ -11,9 +11,9 @@ num_towns = 12
 
 height_map = terrain.generate_height_map(global_width, global_height, river_num, octaves, persistence, lacunarity)
 moisture_map = terrain.generate_moisture_map(global_width, global_height, octaves, persistence, lacunarity)
-town_locations = town.generate_town_locations(height_map, moisture_map, num_towns)
+town_locations, town_names = town.generate_towns(height_map, moisture_map, num_towns)
 
 grid = biomes.get_biome_indices(height_map, moisture_map)
 cmap, norm = biomes.get_cmap_norm()
 
-visualize.draw(grid, cmap, norm, town_locations)
+visualize.draw(grid, cmap, norm, town_locations, town_names)

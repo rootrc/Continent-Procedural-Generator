@@ -1,6 +1,11 @@
 import numpy as np
 from scipy.ndimage import distance_transform_edt
 
+def generate_towns(height_map, moisture_map, num_towns):
+    town_locations = generate_town_locations(height_map, moisture_map, num_towns)
+    town_names = generate_town_names(num_towns)
+    return town_locations, town_names
+
 def generate_town_locations(height_map, moisture_map, num_towns):
     flat_indices = np.argsort(get_location_score(height_map, moisture_map).ravel())[::-1]
     coords = np.column_stack(np.unravel_index(flat_indices, height_map.shape))
@@ -13,7 +18,6 @@ def generate_town_locations(height_map, moisture_map, num_towns):
             break
         if all(np.hypot(x - tx, y - ty) >= min_dist for (ty, tx) in town_locations):
             town_locations.append((y, x))
-
     return town_locations
 
 def get_location_score(height_map, moisture_map):
@@ -32,3 +36,20 @@ def get_location_score(height_map, moisture_map):
     water_proximity_score = 0.05 * (1 - (distance_to_water / max_distance))
 
     return (height_score + moisture_score + water_proximity_score) * valid_mask
+
+syllable_sets = {
+    "prefixes": ["Al", "Bel", "Car", "Dor", "Eld", "Fen", "Gal", "Har", "Ith", "Jar", "Kor", "Lor", "Mor", "Nor", "Or", "Pel", "Quel", "Riv", "Sar", "Tor", "Ul", "Val", "Wyn", "Xan", "Yar", "Zel"],
+    "middles": ["a", "e", "i", "o", "u", "ae", "io", "ar", "el", "or", "an", "in", "un", "eth", "ir", "il"],
+    "suffixes": ["dale", "ford", "heim", "hold", "mere", "mont", "peak", "reach", "rest", "rock", "stead", "ton", "vale", "watch", "wick", "wood"]
+}
+
+def generate_town_names(num_towns):
+    syllables = syllable_sets.get("default", syllable_sets)
+    town_names = []
+    for _ in range(num_towns):
+        name = np.random.choice(syllables["prefixes"])
+        if np.random.rand() > 0.5:
+            name += np.random.choice(syllables["middles"])
+        name += np.random.choice(syllables["suffixes"])
+        town_names.append(name)
+    return np.array(town_names)
