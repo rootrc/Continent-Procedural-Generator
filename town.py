@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.ndimage import distance_transform_edt
 
-def find_town_locations(height_map, moisture_map, num_towns):
+def generate_town_locations(height_map, moisture_map, num_towns):
     flat_indices = np.argsort(get_location_score(height_map, moisture_map).ravel())[::-1]
     coords = np.column_stack(np.unravel_index(flat_indices, height_map.shape))
 
