@@ -47,7 +47,7 @@ def generate_height_map(width, height, scale, seed, cx = global_width/2, cy = gl
     height_map = np.clip(height_map, 0, 1)
     return height_map
 
-def generate_mositure_map(width, height, scale, seed):
+def generate_moisture_map(width, height, scale, seed):
     moisture_map = np.zeros((height, width))
     x = np.arange(width)
     y = np.arange(height)
@@ -94,7 +94,7 @@ height_map = np.array([[np.sum(kernel * height_map[i:i + 3, j:j + 3]) for j in r
 
 seed = np.random.randint(1, 1000)
 scale = 100
-moisture_map = generate_mositure_map(global_width, global_height, scale, seed)
+moisture_map = generate_moisture_map(global_width, global_height, scale, seed)
 
 colors = ['#000080', # Dry    Ocean
           '#000080', # Moist  Ocean
