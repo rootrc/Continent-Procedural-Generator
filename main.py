@@ -5,6 +5,7 @@ from noise import snoise2
 from scipy.ndimage import gaussian_filter
 from artifact_remover import remove_deep_water_artifacts, remove_shallow_water_artifacts
 from river import compute_d8_flow_direction, get_top_n_high_points, trace_river
+from town import find_town_locations
 
 global_width = 512
 global_height = 512
@@ -13,6 +14,7 @@ octaves = 8
 persistence = 0.5
 lacunarity = 2.0
 river_num = 5
+num_towns = 10
 
 def generate_height_map(width, height, scale, seed, cx = global_width/2, cy = global_height/2):
     height_map = np.zeros((height, width))
@@ -68,7 +70,7 @@ def generate_mositure_map(width, height, scale, seed):
     return moisture_map
 
 seed = np.random.randint(1, 1000)
-scale = np.random.randint(130, 140)
+scale = np.random.randint(120, 130)
 cx, cy = np.random.uniform(0.4, 0.6) * global_width, np.random.uniform(0.4, 0.6) * global_height
     
 height_map = generate_height_map(global_width, global_height, scale, seed)
@@ -132,8 +134,13 @@ combined_grid = height_indices * (len(moisture_bounds) - 1) + moisture_indices
 bounds = np.linspace(0, len(colors), len(colors) + 1)
 norm = BoundaryNorm(bounds, cmap.N)
 
+town_locations = find_town_locations(height_map, moisture_map, num_towns)
+
 plt.figure(figsize = (8, 8))
 plt.imshow(combined_grid, cmap = cmap, norm = norm)
+for y, x in town_locations:
+    plt.plot(x, y, 'wo', markersize = 4, markeredgecolor = 'black', label = 'Town' if (y, x) == town_locations[0] else "")
+plt.legend()
 plt.title("Simplex Noise - Continental Shape")
 plt.axis('off')
 plt.tight_layout()
