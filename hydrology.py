@@ -11,16 +11,14 @@ def trace_rivers(height_map, river_num):
         trace_river(flow_dir, height_map, x, y)
 
 def get_top_n_high_points(height_map, n, min_distance = 50):
-    flat_indices = np.argsort(height_map.ravel())[::-1]
+    flat_indices = np.argsort((height_map).ravel())[::-1]
     selected_points = []
-
     for idx in flat_indices:
         x, y = np.unravel_index(idx, height_map.shape)
         if all(np.hypot(x - px, y - py) >= min_distance for px, py in selected_points):
             selected_points.append((x, y))
             if len(selected_points) == n:
                 break
-
     return selected_points
 
 def compute_d8_flow_direction(height_map):
