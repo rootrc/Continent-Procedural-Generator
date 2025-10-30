@@ -1,6 +1,6 @@
 # Continent Procedural Generator
 A tool for creating detailed, procedural maps of fantasy continents.
-It uses noise-based terrain generation, biome classification, rivers, and artifact removal algorithms to produce natural-looking landscapes complete with towns and geographic features.
+It utilizes noise-based terrain generation, biome classification, river modelling, and artifact removal algorithms to produce natural-looking landscapes complete with towns and geographic features.
 ## Features
 - Heightmap generation using Simplex noise
 - Biome classification based on elevation and moisture
@@ -20,4 +20,4 @@ This project requires Python 3.x and the following libraries:
 - scipy
 - tkinter
 
-Then, run `main.py` to launch the generation UI!
+Then, run `main.py` to launch the generation GUI!
