@@ -4,12 +4,6 @@ import terrain, town, biomes, visualize
 global_width = 512
 global_height = 512
 
-# octaves = 8
-# persistence = 0.5
-# lacunarity = 2.0
-# river_num = 5
-# town_num = 12
-
 def generate_world(octaves, persistence, lacunarity, river_num, town_num):
     height_map = terrain.generate_height_map(global_width, global_height, river_num, octaves, persistence, lacunarity)
     moisture_map = terrain.generate_moisture_map(global_width, global_height, octaves, persistence, lacunarity)
